@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iPhone Calculator Clone</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .calculator {
+            width: 320px;
+            padding: 20px;
+            border-radius: 30px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            background-color: #333;
+        }
+
+        #display {
+            width: 100%;
+            height: 80px;
+            font-size: 36px;
+            text-align: right;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #000;
+            color: #fff;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        button {
+            height: 60px;
+            font-size: 28px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Digit buttons (1-9) */
+        button:not(.operator):not(#zero):not(#clear):not(#backspace):not(#equals) {
+            background-color: #505050;
+            color: #fff;
+        }
+
+        /* Zero button */
+        #zero {
+            grid-column: span 2;
+            background-color: #505050;
+            color: #fff;
+        }
+
+        /* Operator buttons (+, -, ×, ÷, =) */
+        .operator {
+            background-color: #ff9500;
+            color: #fff;
+        }
+
+        /* Clear and backspace buttons */
+        #clear, #backspace {
+            background-color: #d4d4d2;
+            color: #000;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <input type="text" id="display" disabled>
+        <div class="buttons">
+            <button id="clear">C</button>
+            <button id="backspace">⌫</button>
+            <button id="divide" class="operator">÷</button>
+            <button id="multiply" class="operator">×</button>
+            <button id="seven">7</button>
+            <button id="eight">8</button>
+            <button id="nine">9</button>
+            <button id="subtract" class="operator">-</button>
+            <button id="four">4</button>
+            <button id="five">5</button>
+            <button id="six">6</button>
+            <button id="add" class="operator">+</button>
+            <button id="one">1</button>
+            <button id="two">2</button>
+            <button id="three">3</button>
+            <button id="equals" class="operator">=</button>
+            <button id="zero">0</button>
+            <button id="decimal">.</button>
+        </div>
+    </div>
+    <script>
+        const display = document.getElementById('display');
+        const buttons = document.querySelectorAll('button');
+
+        let currentNumber = '';
+        let previousNumber = '';
+        let operation = '';
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const value = button.textContent;
+
+                switch (value) {
+                    case 'C':
+                        currentNumber = '';
+                        previousNumber = '';
+                        operation = '';
+                        display.value = '';
+                        break;
+                    case '⌫':
+                        currentNumber = currentNumber.slice(0, -1);
+                        display.value = currentNumber;
+                        break;
+                    case '=':
+                        if (operation && previousNumber) {
+                            const result = calculate(previousNumber, currentNumber, operation);
+                            display.value = result;
+                            previousNumber = result;
+                            currentNumber = '';
+                            operation = '';
+                        }
+                        break;
+                    default:
+                        if (value === '+' || value === '-' || value === '×' || value === '÷') {
+                            operation = value;
+                            previousNumber = currentNumber;
+                            currentNumber = '';
+                        } else {
+                            currentNumber += value;
+                        }
+                        display.value = currentNumber;
+                }
+            });
+        });
+
+        function calculate(num1, num2, operation) {
+            num1 = parseFloat(num1);
+            num2 = parseFloat(num2);
+
+            switch (operation) {
+                case '+':
+                    return num1 + num2;
+                case '-':
+                    return num1 - num2;
+                case '×':
+                    return num1 * num2;
+                case '÷':
+                    return num1 / num2;
+            }
+        }
+    </script>
+</body>
+</html>
